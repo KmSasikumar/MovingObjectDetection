@@ -1,4 +1,4 @@
-# Moving Object Detection System
+# Moving Object Detection 
 
 > **A real-time computer vision system designed for automated surveillance and motion tracking.**
 
@@ -68,6 +68,6 @@ python MovingObjectDetection.py
 | :--- | :--- |
 | **Name** | **K. SasiKumar** |
 | **Registration No** | **22BCE11638** |
-| **Email** | [Kommamani012@gmail.com] |
+| **Email** | Kommamani012@gmail.com |
 
 > *This project was developed as part of a Computer Vision curriculum initiative.*
