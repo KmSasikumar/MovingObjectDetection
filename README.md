@@ -1,46 +1,73 @@
-# MovingObjectDetection
+# Moving Object Detection System
 
-Moving object detection is a technique used in computer vision and image processing. Multiple consecutive frames from a video are compared by various methods to determine if any moving object is detected. Moving objects detection has a wide range of applications like video surveillance, activity recognition, road condition monitoring, airport safety, monitoring of protection along marine border, etc. By acting segmentation among moving objects and stationary area or region, the moving objects motion could be tracked and thus could be analyzed later. To achieve this, consider a video is a structure built upon single frames, moving object detection is to find the foreground moving target(s), either in each video frame or only when the moving target show the first appearance in the video.
+> **A real-time computer vision system designed for automated surveillance and motion tracking.**
 
-# Steps Involved
+## 📌 Project Overview
+This project is a high-performance **Motion Detection System** built with **Python** and **OpenCV**. It empowers users to monitor video feeds in real-time, automatically detecting and highlighting moving objects. By leveraging advanced image processing techniques like **Gaussian Blurring** and **Background Subtraction**, the system filters out noise and focuses strictly on significant movement, making it ideal for security and surveillance applications.
 
-1. Extract Background in Video Input :
+## 🚀 Key Features
+*   **Real-time Motion Tracking:** Captures live video streams and processes frames instantly to distinguish movement.
+*   **Intelligent Background Subtraction:** Automatically calculates pixel-identifiable differences between the current frame and a reference background.
+*   **Visual Alert System:** Dynamically draws **green bounding boxes** around detected objects and updates on-screen status to warn users.
+*   **Noise Reduction:** Implements Gaussian Blur to smooth video input, preventing false detections from minor lighting shifts or camera grain.
 
-       * Capturing the Video in 'cap' and extract 30 random frames and store the selected frames in an array
-       
-       * Calculating median and average frames, for better outlier removal
+## 🛠️ Technical Stack
 
-2. Processing a Frame :
+| Category | Technology | Usage |
+| :--- | :--- | :--- |
+| **Language** | **Python 3.x** | Core logic and scripting. |
+| **Computer Vision** | **OpenCV (`cv2`)** | Image processing, frame capture, and contour detection. |
+| **Utilities** | **Imutils** | Image resizing and ease-of-use helpers. |
+| **Processing** | **NumPy** | High-speed array operations (implicit in OpenCV). |
 
-        * Studying a single frame separately (first frame)
-        
-        * Converting the Median and sample image to grayscale
+## 📐 System Architecture
 
-3. Background Removal :
+The system operates on a linear processing pipeline. For a detailed technical breakdown and flowcharts, please refer to [PROJECT_ARCHITECTURE.md](./PROJECT_ARCHITECTURE.md).
 
-        * Performing Absolute Difference between gray_frame_sample and gray_frame_median to get the moving objects only, with the background removed
-        
-4. Blurring :
+```mermaid
+graph LR
+    A[Camera Input] --> B(Grayscale & Blur)
+    B --> C{Diff > Threshold?}
+    C -- Yes --> D[Dilate & Find Contours]
+    D --> E[Draw Bounding Box]
+    C -- No --> A
+```
 
-        * Performing Gaussian Blur for noise reduction and to simplify edge detection  
-        
-5. Binarizing the image - Thresholding : 
+## ⚙️ How It Works
+1.  **Initialization**: The camera starts and captures the **First Frame**, storing it as the "static background" reference.
+2.  **Pre-Processing**: Incoming frames are resized, converted to grayscale, and blurred to remove high-frequency noise.
+3.  **Difference Calculation**: The system computes the `absolute difference` between the current frame and the reference frame.
+4.  **Thresholding**: Differences are converted to binary (Black/White). Only clusters of white pixels (movement) are kept.
+5.  **Object Detection**: Contours are drawn around these clusters. If a contour's area exceeds **500 pixels**, it is marked as a moving object.
 
-         * Performing Threshold and OTSU Threshold to bring the moving objects out clearly
-         
-6. Countour and Boundary Boxes :
+## 📦 Installation & Usage
 
-         *  Creating contours on the thresholded frame. Contours are curves joining continuous points in an image with same color intensity. We shall use
-            cv2.RETR_EXTERNAL to fing the extreme outer contours and cv2.CHAIN_APPROX_SIMPLE to remove the redundant points.
-           
-         * Creating Bounding Boxes (rectangular) for identified contours and display them on frame_sample
-         
-7. Compiling frames together for processing video :
+**1. Prerequisites**
+Ensure you have Python installed. You will need the following libraries:
 
-          * Declaring output video to be created
-          * Creating cap and getting total frame count
-          * Running a Loop to go through all frames and process the Video
-     
-# Output :
+```bash
+pip install opencv-python imutils
+```
 
-To see the output video, go to the media file and check the output video
+**2. Running the Project**
+Navigate to the project directory and run the script:
+
+```bash
+python MovingObjectDetection.py
+```
+
+**3. Controls**
+*   The system opens a window showing the live camera feed.
+*   **"Normal"**: Status when no motion is detected.
+*   **"Moving Object Detected"**: Status when motion is tracked.
+*   **Quit**: Press `q` to close the application.
+
+## 👨‍💻 Author
+
+| Information | Details |
+| :--- | :--- |
+| **Name** | **K. SasiKumar** |
+| **Registration No** | **22BCE11638** |
+| **Email** | [Kommamani012@gmail.com] |
+
+> *This project was developed as part of a Computer Vision curriculum initiative.*
