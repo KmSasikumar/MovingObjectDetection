@@ -70,4 +70,3 @@ python MovingObjectDetection.py
 | **Registration No** | **22BCE11638** |
 | **Email** | Kommamani012@gmail.com |
 
-> *This project was developed as part of a Computer Science.*
