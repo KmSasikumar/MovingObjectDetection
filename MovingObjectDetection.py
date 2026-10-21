@@ -18,6 +18,7 @@ STATUS_MOVING = "Moving Object detected"
 DEFAULT_WIDTH = 500
 DEFAULT_MIN_AREA = 500
 DEFAULT_THRESHOLD = 25
+DEFAULT_LEARNING_RATE = 0.05
 BLUR_KERNEL = (21, 21)
 
 
@@ -62,7 +63,7 @@ def main():
             print("error: could not open video source '0'", file=sys.stderr)
             return 1
         time.sleep(1)
-        first_frame = None
+        background = None  # float32 running average of blurred frames
         frames = 0
         while True:
             ok, img = cam.read()
@@ -75,10 +76,15 @@ def main():
             frames += 1
             text = STATUS_NORMAL
             img, blurred = preprocess(img)
-            if first_frame is None:
-                first_frame = blurred
+            if background is None:
+                background = blurred.astype("float32")
                 continue
-            boxes = find_moving_boxes(first_frame, blurred)
+            # The background adapts every frame (running average), so a
+            # change that stops moving fades from it instead of being
+            # reported as motion forever; a moving object still differs
+            # at its new position.
+            boxes = find_moving_boxes(cv2.convertScaleAbs(background), blurred)
+            cv2.accumulateWeighted(blurred, background, DEFAULT_LEARNING_RATE)
             if boxes:
                 text = STATUS_MOVING
             print(text)
