@@ -34,7 +34,7 @@ graph LR
 ```
 
 ## ⚙️ How It Works
-1.  **Initialization**: The camera starts and captures the **First Frame**, storing it as the "static background" reference.
+1.  **Initialization**: The camera starts and captures the **First Frame**, storing it as the initial background reference. The background then keeps adapting slowly (a running average of recent frames), so a change that stops moving — or an object that was only in the first frame — stops being reported as motion instead of triggering a false alarm forever.
 2.  **Pre-Processing**: Incoming frames are resized, converted to grayscale, and blurred to remove high-frequency noise.
 3.  **Difference Calculation**: The system computes the `absolute difference` between the current frame and the reference frame.
 4.  **Thresholding**: Differences are converted to binary (Black/White). Only clusters of white pixels (movement) are kept.
@@ -43,10 +43,11 @@ graph LR
 ## 📦 Installation & Usage
 
 **1. Prerequisites**
-Ensure you have Python installed. You will need the following libraries:
+Ensure you have Python installed, then install the dependencies from the
+project's requirements file:
 
 ```bash
-pip install opencv-python imutils
+pip install -r requirements.txt
 ```
 
 **2. Running the Project**
@@ -54,6 +55,26 @@ Navigate to the project directory and run the script:
 
 ```bash
 python MovingObjectDetection.py
+```
+
+By default it uses camera `0`. A recorded video file can be processed
+instead, and the window can be disabled for headless runs:
+
+```bash
+python MovingObjectDetection.py --source path/to/video.mp4 --no-display
+```
+
+Other options: `--min-area` (minimum contour area treated as motion,
+default 500), `--width`, and `--learning-rate` (how fast the background
+adapts, default 0.05). If the camera/source cannot be opened or no frames
+can be read, the program exits with code 1 and a clear error message
+instead of a traceback.
+
+**3. Tests**
+Headless tests (synthetic frames, no camera needed):
+
+```bash
+python -m unittest test_moving_object_detection -v
 ```
 
 **3. Controls**

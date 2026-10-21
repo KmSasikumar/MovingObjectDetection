@@ -47,6 +47,7 @@ These values determine the sensitivity of the detection.
 | `area` | `500` | Minimum size (in pixels) for an object to be considered "moving". Smaller changes are ignored. |
 | `Gaussian Kernel` | `(21, 21)` | The strength of the blur. Higher numbers = blurry image = less sensitive to small light flickers. |
 | `Threshold Limit` | `25` | Use to decide if a pixel change is significant enough to be "motion". |
+| `learning_rate` | `0.05` | How fast the background (a running average started from the first frame) adapts per frame, so static changes fade instead of being reported as motion forever. Configurable via `--learning-rate`. |
 
 ## 4. Operational States
 
