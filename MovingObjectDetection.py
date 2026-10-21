@@ -56,25 +56,30 @@ def annotate(frame, boxes, status):
 
 def main():
     cam = cv2.VideoCapture(0)
-    time.sleep(1)
-    first_frame = None
-    while True:
-        _, img = cam.read()
-        text = STATUS_NORMAL
-        img, blurred = preprocess(img)
-        if first_frame is None:
-            first_frame = blurred
-            continue
-        boxes = find_moving_boxes(first_frame, blurred)
-        if boxes:
-            text = STATUS_MOVING
-        print(text)
-        cv2.imshow("cameraFeed", annotate(img, boxes, text))
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-    cam.release()
-    cv2.destroyAllWindows()
+    try:
+        time.sleep(1)
+        first_frame = None
+        while True:
+            _, img = cam.read()
+            text = STATUS_NORMAL
+            img, blurred = preprocess(img)
+            if first_frame is None:
+                first_frame = blurred
+                continue
+            boxes = find_moving_boxes(first_frame, blurred)
+            if boxes:
+                text = STATUS_MOVING
+            print(text)
+            cv2.imshow("cameraFeed", annotate(img, boxes, text))
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord("q"):
+                break
+    finally:
+        cam.release()
+        try:
+            cv2.destroyAllWindows()
+        except cv2.error:
+            pass
 
 
 if __name__ == "__main__":
