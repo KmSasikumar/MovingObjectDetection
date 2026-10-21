@@ -6,6 +6,7 @@ only opened when ``main()`` runs (i.e. when the file is executed as a
 script).
 """
 
+import sys
 import time
 
 import cv2
@@ -57,10 +58,21 @@ def annotate(frame, boxes, status):
 def main():
     cam = cv2.VideoCapture(0)
     try:
+        if not cam.isOpened():
+            print("error: could not open video source '0'", file=sys.stderr)
+            return 1
         time.sleep(1)
         first_frame = None
+        frames = 0
         while True:
-            _, img = cam.read()
+            ok, img = cam.read()
+            if not ok or img is None:
+                if frames == 0:
+                    print("error: no frames could be read from video "
+                          "source '0'", file=sys.stderr)
+                    return 1
+                break  # end of stream: finish cleanly
+            frames += 1
             text = STATUS_NORMAL
             img, blurred = preprocess(img)
             if first_frame is None:
@@ -74,6 +86,7 @@ def main():
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 break
+        return 0
     finally:
         cam.release()
         try:
