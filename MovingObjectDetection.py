@@ -65,6 +65,7 @@ def main():
         time.sleep(1)
         background = None  # float32 running average of blurred frames
         frames = 0
+        last_status = None
         while True:
             ok, img = cam.read()
             if not ok or img is None:
@@ -87,7 +88,9 @@ def main():
             cv2.accumulateWeighted(blurred, background, DEFAULT_LEARNING_RATE)
             if boxes:
                 text = STATUS_MOVING
-            print(text)
+            if text != last_status:
+                print(text)
+                last_status = text
             cv2.imshow("cameraFeed", annotate(img, boxes, text))
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
